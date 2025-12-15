@@ -1,14 +1,39 @@
 services:
-  mysql:
-    image: 'mysql:latest'
+  tool-db:
+    image: mysql:latest
+    container_name: tool-db
+    ports:
+      - "3306:3306"
     environment:
-      - 'MYSQL_DATABASE=mydatabase'
-      - 'MYSQL_PASSWORD=secret'
-      - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
+      - 'MARIADB_ROOT_PASSWORD=ciVDOYezquEYQb'
+      - 'TZ=Asia/Shanghai'
+    volumes:
+      - /home/ubuntu/mariadb_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - tool-net
+  tool-redis:
+    image: redis:latest
+    container_name: tool-redis
+    restart: unless-stopped
     ports:
-      - '3306'
-  redis:
-    image: 'redis:latest'
+      - "6379:6379"
+    volumes:
+      - /home/ubuntu/redis-conf/redis.conf:/usr/local/etc/redis/redis/conf:ro
+    networks:
+      - tool-net
+    command: [ "redis-server","/usr/local/etc/redis/redis/conf" ]
+  tool:
+    image: tool-app:latest
+    container_name: tool
+    restart: unless-stopped
     ports:
-      - '6379'
+      - "6677:6677"
+    networks:
+      - tool-net
+    depends_on:
+      - tool-db
+      - tool-redis
+networks:
+  tool-net:
+    driver: bridge

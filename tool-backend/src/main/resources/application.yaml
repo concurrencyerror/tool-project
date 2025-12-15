@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: tool-backend
+  profiles:
+    active: dev
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+server:
+  port: 6677
+check:
+  time: https://timor.tech/api/holiday/info

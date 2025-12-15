@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://tool-db:3306/tools
+    username: root
+    password: 1ciVDOYezquEYQb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      password: 1Bsw6BL2xNloQMh
+      host: tool-redis
+logging:
+  config: classpath:log/log-back.xml
