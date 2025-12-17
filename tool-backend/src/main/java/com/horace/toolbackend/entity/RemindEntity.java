@@ -9,7 +9,7 @@ import java.util.Date;
 public class RemindEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     //提醒的开始时间
     private Date remindStartTime;
@@ -37,11 +37,11 @@ public class RemindEntity {
         this.tenant = tenant;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
