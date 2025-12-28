@@ -1,9 +1,13 @@
 package com.horace.toolbackend.service;
 
+import com.horace.toolbackend.entity.RemindEntity;
 import com.horace.toolbackend.repository.RemindRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class RemindService {
@@ -16,5 +20,7 @@ public class RemindService {
         this.remindRepository = remindRepository;
     }
 
-
+    public List<RemindEntity> findRemindEntitiesByTime(LocalDateTime time){
+        return remindRepository.findActiveAt(time);
+    }
 }
