@@ -16,4 +16,15 @@ public class JacksonUtil {
     public static JsonNode readTree(String json) {
         return objectMapper.readTree(json);
     }
+
+    /**
+     * 生成的是格式化的 json
+     *
+     * @param obj 实体类
+     * @param <T> 需要生成 json的数据
+     * @return 返回 json
+     */
+    public static <T> String writePrettyValueAsString(T obj) {
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+    }
 }

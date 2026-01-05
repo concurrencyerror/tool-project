@@ -1,5 +1,10 @@
 package com.horace.toolbackend.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import java.util.Arrays;
+
 /**
  * 节假日枚举
  *
@@ -18,5 +23,17 @@ public enum DateType {
     DateType(String code, String msg) {
         this.code = code;
         this.msg = msg;
+    }
+
+    @JsonValue
+    public String value() {
+        return this.msg;
+    }
+
+    @JsonCreator
+    public static DateType from(String code) {
+        return Arrays.stream(values())
+                .filter(item -> item.code.equals(code))
+                .findFirst().orElseThrow(IllegalArgumentException::new);
     }
 }
