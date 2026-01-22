@@ -2,18 +2,21 @@ package com.horace.toolbackend.third;
 
 import com.horace.toolbackend.exception.ThirdApiException;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.restclient.test.autoconfigure.RestClientTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.springframework.web.client.RestClient;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-@RestClientTest(value = ThirdTimeApiClient.class,
-properties = "check.time=https://timor.tech/api/holiday/info")
+
+
+@RestClientTest(ThirdTimeApiClient.class)
 class ThirdTimeApiClientTest {
 
 
@@ -32,7 +35,5 @@ class ThirdTimeApiClientTest {
         assertThatThrownBy(() -> thirdTimeApiClient.getTime("2026-01-01"))
                 .isInstanceOf(ThirdApiException.class);
     }
-
-
 
 }

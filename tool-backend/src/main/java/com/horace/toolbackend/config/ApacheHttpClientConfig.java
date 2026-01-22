@@ -19,7 +19,7 @@ import java.time.Duration;
 public class ApacheHttpClientConfig {
 
     @Bean(destroyMethod = "close")
-    CloseableHttpClient apacheHttpClient() {
+    public CloseableHttpClient apacheHttpClient() {
 
         //超时配置
         ConnectionConfig connectionConfig = ConnectionConfig.custom()
@@ -53,7 +53,7 @@ public class ApacheHttpClientConfig {
     }
 
     @Bean
-    ClientHttpRequestFactory clientHttpRequestFactory(CloseableHttpClient apacheHttpClient) {
+    public ClientHttpRequestFactory clientHttpRequestFactory(CloseableHttpClient apacheHttpClient) {
         HttpComponentsClientHttpRequestFactory factory =
                 new HttpComponentsClientHttpRequestFactory(apacheHttpClient);
 
@@ -63,7 +63,7 @@ public class ApacheHttpClientConfig {
     }
 
     @Bean
-    RestClient restClient(ClientHttpRequestFactory factory) {
+    public RestClient restClient(ClientHttpRequestFactory factory) {
         // 用 Boot 预配置过的 builder（含 message converters），只替换底层请求工厂
         return RestClient.builder()
                 .requestFactory(factory)

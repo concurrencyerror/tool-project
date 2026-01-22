@@ -3,6 +3,7 @@ package com.horace.toolbackend.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -11,7 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
  * 安全相关的配置
  */
 @Configuration
-public class SecurityConfig {
+@EnableWebSecurity
+public class ToolSecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -20,7 +22,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain springSecurityFilterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth

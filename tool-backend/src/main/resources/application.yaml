@@ -11,9 +11,6 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-  Jackson:
-    deserialization:
-      read-unknown-enum-values-using-default-value: true
 server:
   port: 6677
 check:
