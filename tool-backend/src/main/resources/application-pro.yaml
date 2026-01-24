@@ -3,7 +3,7 @@ spring:
     url: jdbc:mariadb://tool-db:3306/tools
     username: root
     password: 1ciVDOYezquEYQb
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.mariadb.jdbc.Driver
   data:
     redis:
       password: 1Bsw6BL2xNloQMh

@@ -1,9 +1,9 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.mariadb.jdbc.Driver
     username: root
-    password: root1234
-    url: jdbc:mysql://localhost:3306/tools
+    password: 1ciVDOYezquEYQb
+    url: jdbc:mariadb://101.34.76.31:3306/tools-dev
   data:
     redis:
       host: 101.34.76.31
