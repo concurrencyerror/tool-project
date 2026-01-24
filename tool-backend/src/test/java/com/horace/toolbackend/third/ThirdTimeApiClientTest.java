@@ -1,7 +1,9 @@
 package com.horace.toolbackend.third;
 
 import com.horace.toolbackend.config.MyRestClientConfig;
+import com.horace.toolbackend.entity.api.TimeApiEntity;
 import com.horace.toolbackend.exception.ThirdApiException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.restclient.test.autoconfigure.RestClientTest;
@@ -26,14 +28,20 @@ class ThirdTimeApiClientTest {
     @Autowired
     MockRestServiceServer mockServer;
 
-
     @Test
     void checkTime_shouldThrowThirdApiException_when500() {
-        mockServer.expect(MockRestRequestMatchers.requestTo("https://timor.tech/api/holiday/info/2026-01-01"))
-                .andExpect(MockRestRequestMatchers.method(HttpMethod.POST))
+        mockServer.expect(MockRestRequestMatchers.requestToUriTemplate("https://timor.tech/api/holiday/info/{date}"
+                        , "2026-01-24"))
+                .andExpect(MockRestRequestMatchers.method(HttpMethod.GET))
                 .andRespond(MockRestResponseCreators.withStatus(HttpStatus.INTERNAL_SERVER_ERROR).body("boom"));
-        assertThatThrownBy(() -> thirdTimeApiClient.getTime("2026-01-01"))
+        assertThatThrownBy(() -> thirdTimeApiClient.getTime("2026-01-24"))
                 .isInstanceOf(ThirdApiException.class);
+    }
+
+    @Test
+    void checkTime_shouldReturnTimeEntity_when200() {
+        Assertions.assertThat(thirdTimeApiClient.getTime("2026-01-24"))
+                .isInstanceOf(TimeApiEntity.class);
     }
 
 }

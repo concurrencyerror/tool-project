@@ -7,8 +7,11 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.util.Timeout;
+import org.springframework.boot.restclient.RestClientCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
@@ -63,10 +66,14 @@ public class MyRestClientConfig {
     }
 
     @Bean
-    public RestClient restClient(ClientHttpRequestFactory factory, RestClient.Builder builder) {
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public RestClientCustomizer restClientCustomizer(ClientHttpRequestFactory factory) {
+        return builder -> builder.requestFactory(factory);
+    }
+
+    @Bean
+    public RestClient restClient(RestClient.Builder builder) {
         // 用 Boot 预配置过的 builder（含 message converters），只替换底层请求工厂
-        return builder
-                .requestFactory(factory)
-                .build();
+        return builder.build();
     }
 }
