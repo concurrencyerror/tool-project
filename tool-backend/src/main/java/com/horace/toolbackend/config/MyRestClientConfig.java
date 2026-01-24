@@ -16,7 +16,7 @@ import org.springframework.web.client.RestClient;
 import java.time.Duration;
 
 @Configuration(proxyBeanMethods = false)
-public class ApacheHttpClientConfig {
+public class MyRestClientConfig {
 
     @Bean(destroyMethod = "close")
     public CloseableHttpClient apacheHttpClient() {
@@ -63,9 +63,9 @@ public class ApacheHttpClientConfig {
     }
 
     @Bean
-    public RestClient restClient(ClientHttpRequestFactory factory) {
+    public RestClient restClient(ClientHttpRequestFactory factory, RestClient.Builder builder) {
         // 用 Boot 预配置过的 builder（含 message converters），只替换底层请求工厂
-        return RestClient.builder()
+        return builder
                 .requestFactory(factory)
                 .build();
     }
