@@ -27,4 +27,9 @@ public class JacksonUtil {
     public static <T> String writePrettyValueAsString(T obj) {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
     }
+
+
+    public static <T> String toJson(T obj) {
+        return objectMapper.writeValueAsString(obj);
+    }
 }
