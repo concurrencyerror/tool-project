@@ -65,12 +65,23 @@ public class MyRestClientConfig {
         return factory;
     }
 
+    /**
+     * 增加定制化的factory，避免干扰mock进行
+     *
+     * @param factory 定制化factory
+     * @return RestClientCustomizer
+     */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public RestClientCustomizer restClientCustomizer(ClientHttpRequestFactory factory) {
         return builder -> builder.requestFactory(factory);
     }
 
+    /**
+     * 用spring framework内部生成的builder来进行处理，否则测试的mock可能会被绕过
+     * @param builder RestClient.Builder 从spring framework内部生成的builder
+     * @return RestClient
+     */
     @Bean
     public RestClient restClient(RestClient.Builder builder) {
         // 用 Boot 预配置过的 builder（含 message converters），只替换底层请求工厂
