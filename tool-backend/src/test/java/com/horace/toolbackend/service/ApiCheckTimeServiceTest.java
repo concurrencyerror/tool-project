@@ -6,6 +6,7 @@ import com.horace.toolbackend.third.ThirdTimeApiClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -68,7 +69,27 @@ class ApiCheckTimeServiceTest {
         verify(thirdTimeApiClient).getTime("2026-01-24");
     }
 
-    //todo 还有两个测试没加，之后加一下
+    @Test
+    void should_return_false_when_restClient_returns_null() {
+        when(thirdTimeApiClient.getTime(anyString())).thenReturn(entity(DateType.workDay));
+        apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(thirdTimeApiClient).getTime(captor.capture());
+        assertThat(captor.getValue()).isEqualTo("2026-01-24");
+    }
+
+    @Test
+    void should_return_true_when_entity_or_type_is_null_because_it_will_be_caught() {
+        when(thirdTimeApiClient.getTime(anyString())).thenReturn(null);
+        boolean allNullResult = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        assertThat(allNullResult).isTrue();
+
+        reset(thirdTimeApiClient);
+        when(thirdTimeApiClient.getTime(anyString())).thenReturn(entityWithNullType());
+        boolean nullTypeResult = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        assertThat(nullTypeResult).isTrue();
+    }
 
 
     private static TimeApiEntity entity(DateType dateType) {
@@ -77,6 +98,13 @@ class ApiCheckTimeServiceTest {
         t.type = dateType;
         e.setType(t);
         e.setCode("0");      // code 目前逻辑没用到，随便给个值也行
+        return e;
+    }
+
+    private static TimeApiEntity entityWithNullType() {
+        TimeApiEntity e = new TimeApiEntity();
+        e.setType(null);
+        e.setCode("0");
         return e;
     }
 }
