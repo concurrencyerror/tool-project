@@ -1,22 +1,93 @@
-### tool project
+﻿# Tool Project
 
-为了应对日益膨胀的功能需求，我需要有一个强劲的后端程序和一个前端程序来服务我的生活，所以要对之前的项目进行重写
+## 项目概述
 
-### 整个项目的思路和大纲
+这是一个以 `tool-backend` 为核心的 Spring Boot 后端项目，目标是实现提醒配置、工作日判断（第三方节假日 API）和多租户基础能力。
 
-### 前提：
-- #### 项目的所有内容，尤其是后端部分都必须要有相关的测试内容，无论是单元测试还是整体的逻辑测试，要以测试先行为原则来开发代码
-- #### 项目内容务必要经过深思熟虑才能加上，否则后期维护会非常麻烦，但是不要害怕重构，合理地重构可以让项目焕发出新的活力
-- #### 项目内的所有代码在提交时必须开启处理警告的提示，并且对警告的代码进行更改，对commit信息务必做到准确
-### 是否需要租户
-##### 我是这样想的，如果有多人使用的话，确实可以通过用户的信息来区别用户之间的数据，但是这种区别还是存在于用户层面，如果需要很彻底的隔离是很麻烦的事情，所以还是引入一个租户的机制。这样一旦需要彻底隔离数据的时候还有一条退路（这个思路记下来，防止以后会改变或者有新的想法）
+## 技术栈
 
+- Java 25
+- Spring Boot 4.0.0
+- Spring Data JPA / Security / Redis
+- MariaDB Driver
+- Docker Compose
 
-### 相关功能点（完成的部分都会划线，表示已经完成）：
+## 项目结构
 
-- #### ~~完成第一版的后端基础内容搭建~~
-- #### 使用ddd设计先搞一版 
-- #### 完成第一版前端的基础内容搭建 
-- #### 开始开发前端的管理台相关页面 
-- #### 前后端联调 
-- #### 最终完成上线
+```text
+tool-project/
+├─ README.md
+└─ tool-backend/
+   ├─ pom.xml
+   ├─ compose.yaml
+   ├─ Dockerfile
+   ├─ sql/
+   └─ src/
+      ├─ main/
+      └─ test/
+```
+
+## 现状分析（2026-03-17）
+
+通过代码与配置审查，当前项目存在以下关键问题：
+
+### P0（阻塞级）
+
+1. `JacksonUtil` 代码存在明显编译/运行风险  
+   文件：`tool-backend/src/main/java/com/horace/toolbackend/util/JacksonUtil.java`  
+   问题：导包为 `tools.jackson.*`（非常规包名），且序列化相关调用未见异常处理。
+
+2. 敏感信息明文入库  
+   文件：
+   - `tool-backend/src/main/resources/application-dev.yaml`
+   - `tool-backend/src/main/resources/application-pro.yaml`  
+     问题：数据库与 Redis 密码直接写在仓库配置中。
+
+### P1（高优先级）
+
+1. Compose 数据库配置不一致  
+   文件：`tool-backend/compose.yaml:3,8`  
+   问题：镜像是 `mysql:latest`，却使用 `MARIADB_ROOT_PASSWORD` 环境变量。
+
+2. Redis 配置挂载路径可疑  
+   文件：`tool-backend/compose.yaml:22,25`  
+   问题：挂载和启动参数指向 `/usr/local/etc/redis/redis/conf`，路径像目录而不是标准配置文件。
+
+3. 时间类型设计不统一  
+   文件：
+   - `tool-backend/src/main/java/com/horace/toolbackend/entity/RemindEntity.java`
+   - `tool-backend/src/main/java/com/horace/toolbackend/repository/RemindRepository.java`  
+     问题：实体使用 `Date`，查询参数使用 `LocalDateTime`，容易出现时区与参数转换问题。
+
+4. 实体访问器不完整  
+   文件：`tool-backend/src/main/java/com/horace/toolbackend/entity/RemindEntity.java`  
+   问题：`user` 字段缺少 getter/setter。
+
+### P2（中优先级）
+
+1. 当前未发现对外业务入口（Controller/Scheduler/Runner）。
+2. `log-back.xml` 含硬编码 Linux 路径及乱码字符，跨环境可移植性弱。
+3. 项目多处注释/文档编码异常，影响协作维护。
+4. `main` 方法当前是包可见（`static void main`），在 JDK 25 语义下通常可启动，但若考虑旧版本 JDK 或部分工具链兼容，建议改为
+   `public static void main`。
+
+## 建议修复顺序
+
+1. 修复启动与编译阻塞问题（优先处理 `JacksonUtil`）。
+2. 迁移密钥到环境变量或密钥管理服务，清理仓库中的明文密码。
+3. 修正 Compose 的 DB/Redis 配置，确保一键启动可用。
+4. 统一时间模型（建议全链路 `LocalDateTime` 或 `Instant` + 时区策略）。
+5. 增加 Controller 或任务调度入口，并补充端到端测试。
+6. 统一编码为 UTF-8，清理乱码注释和文档。
+
+## 本地运行（建议）
+
+1. 安装 JDK 25、Maven 3.9+。
+2. 配置数据库和 Redis（建议使用 `.env` 注入密码）。
+3. 进入目录：`tool-backend`
+4. 执行：`mvn clean test`、`mvn spring-boot:run`
+
+## 备注
+
+- 本次分析基于当前仓库静态审查完成。
+- 当前环境未安装 Maven，未能在此环境内复跑测试命令。
