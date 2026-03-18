@@ -33,9 +33,9 @@ tool-project/
 
 ### P0（阻塞级）
 
-1. `JacksonUtil` 代码存在明显编译/运行风险  
+1. `JacksonUtil` 代码存在明显编译/运行风险（已于 2026-03-18 修复）  
    文件：`tool-backend/src/main/java/com/horace/toolbackend/util/JacksonUtil.java`  
-   问题：导包为 `tools.jackson.*`（非常规包名），且序列化相关调用未见异常处理。
+   原问题：导包为 `tools.jackson.*`，且序列化相关调用未见异常处理。当前已改为标准 `com.fasterxml.jackson.*` 导包，并统一封装 JSON 转换异常。
 
 2. 敏感信息明文入库  
    文件：

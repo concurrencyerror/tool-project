@@ -1,11 +1,16 @@
 package com.horace.toolbackend.util;
 
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.horace.toolbackend.exception.JsonConvertException;
 
-public class JacksonUtil {
+public final class JacksonUtil {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    private JacksonUtil() {
+    }
 
     /**
      * Parse JSON string into a JsonNode object.
@@ -14,22 +19,41 @@ public class JacksonUtil {
      * @return JsonNode representation of the JSON string
      */
     public static JsonNode readTree(String json) {
-        return objectMapper.readTree(json);
+        try {
+            return OBJECT_MAPPER.readTree(json);
+        } catch (JsonProcessingException e) {
+            throw new JsonConvertException("Failed to parse json", e);
+        }
     }
 
     /**
-     * 生成的是格式化的 json
+     * Generates formatted json.
      *
-     * @param obj 实体类
-     * @param <T> 需要生成 json的数据
-     * @return 返回 json
+     * @param obj entity object
+     * @param <T> object type to serialize
+     * @return pretty json
      */
     public static <T> String writePrettyValueAsString(T obj) {
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        try {
+            return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new JsonConvertException("Failed to serialize object to pretty json", e);
+        }
     }
 
+    public static <T> String safePrettyValueAsString(T obj) {
+        try {
+            return writePrettyValueAsString(obj);
+        } catch (JsonConvertException e) {
+            return String.valueOf(obj);
+        }
+    }
 
     public static <T> String toJson(T obj) {
-        return objectMapper.writeValueAsString(obj);
+        try {
+            return OBJECT_MAPPER.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new JsonConvertException("Failed to serialize object to json", e);
+        }
     }
 }

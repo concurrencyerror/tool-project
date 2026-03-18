@@ -8,4 +8,8 @@ public class ThirdApiException extends RuntimeException {
     public ThirdApiException(String message) {
         super(message);
     }
+
+    public ThirdApiException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
