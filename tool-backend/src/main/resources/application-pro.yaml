@@ -1,12 +1,13 @@
 spring:
   datasource:
-    url: jdbc:mariadb://tool-db:3306/tools
-    username: root
-    password: 1ciVDOYezquEYQb
+    url: ${DB_URL:jdbc:mariadb://tool-db:3306/tools}
+    username: ${DB_USERNAME:tool_user}
+    password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
   data:
     redis:
-      password: 1Bsw6BL2xNloQMh
-      host: tool-redis
+      host: ${REDIS_HOST:tool-redis}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
 logging:
   config: classpath:log/log-back.xml

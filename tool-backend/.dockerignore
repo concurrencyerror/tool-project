@@ -1,0 +1,9 @@
+target/
+.idea/
+*.iml
+.git/
+.gitignore
+compose.yaml
+README.md
+*.log
+.env

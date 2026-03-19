@@ -18,6 +18,8 @@
 tool-project/
 ├─ README.md
 └─ tool-backend/
+   ├─ .dockerignore
+   ├─ .env.example
    ├─ pom.xml
    ├─ compose.yaml
    ├─ Dockerfile
@@ -37,21 +39,21 @@ tool-project/
    文件：`tool-backend/src/main/java/com/horace/toolbackend/util/JacksonUtil.java`  
    原问题：导包为 `tools.jackson.*`，且序列化相关调用未见异常处理。当前已改为标准 `com.fasterxml.jackson.*` 导包，并统一封装 JSON 转换异常。
 
-2. 敏感信息明文入库  
+2. 敏感信息明文入库（已于 2026-03-18 修复）  
    文件：
    - `tool-backend/src/main/resources/application-dev.yaml`
    - `tool-backend/src/main/resources/application-pro.yaml`  
-     问题：数据库与 Redis 密码直接写在仓库配置中。
+     原问题：数据库与 Redis 密码直接写在仓库配置中。当前已切换为环境变量注入，并新增 `tool-backend/.env.example` 作为示例。
 
 ### P1（高优先级）
 
-1. Compose 数据库配置不一致  
+1. Compose 数据库配置不一致（已于 2026-03-18 修复）  
    文件：`tool-backend/compose.yaml:3,8`  
-   问题：镜像是 `mysql:latest`，却使用 `MARIADB_ROOT_PASSWORD` 环境变量。
+   原问题：镜像是 `mysql:latest`，却使用 `MARIADB_ROOT_PASSWORD` 环境变量。当前已统一改为 `mariadb` 镜像与对应环境变量。
 
-2. Redis 配置挂载路径可疑  
+2. Redis 配置挂载路径可疑（已于 2026-03-18 修复）  
    文件：`tool-backend/compose.yaml:22,25`  
-   问题：挂载和启动参数指向 `/usr/local/etc/redis/redis/conf`，路径像目录而不是标准配置文件。
+   原问题：挂载和启动参数指向 `/usr/local/etc/redis/redis/conf`，路径像目录而不是标准配置文件。当前已改为直接使用容器命令行参数配置 Redis 密码和持久化。
 
 3. 时间类型设计不统一  
    文件：
@@ -83,11 +85,51 @@ tool-project/
 ## 本地运行（建议）
 
 1. 安装 JDK 25、Maven 3.9+。
-2. 配置数据库和 Redis（建议使用 `.env` 注入密码）。
+2. 配置数据库和 Redis 连接信息，建议通过环境变量注入。
 3. 进入目录：`tool-backend`
 4. 执行：`mvn clean test`、`mvn spring-boot:run`
+
+可选环境变量示例：
+
+```env
+DB_URL=jdbc:mariadb://127.0.0.1:3306/tools-dev
+DB_USERNAME=root
+DB_PASSWORD=change-me
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_PASSWORD=change-me
+```
+
+## Docker 部署
+
+当前仓库中的 `tool-backend/Dockerfile` 只负责构建和运行后端服务，前端如果存在，应单独部署。
+
+1. 进入目录：`tool-backend`
+2. 复制环境文件：将 `.env.example` 复制为 `.env`
+3. 按实际环境修改 `.env` 中的数据库、Redis 和端口配置
+4. 启动服务：`docker compose up --build -d`
+5. 查看状态：`docker compose ps`
+6. 查看日志：`docker compose logs -f tool-backend`
+
+默认会启动以下服务：
+
+- `tool-backend`：Spring Boot 后端，默认映射端口 `6677`
+- `tool-db`：MariaDB 11.8
+- `tool-redis`：Redis 7.4
+
+停止服务：
+
+```bash
+docker compose down
+```
+
+如果需要连同数据卷一并清理：
+
+```bash
+docker compose down -v
+```
 
 ## 备注
 
 - 本次分析基于当前仓库静态审查完成。
-- 当前环境未安装 Maven，未能在此环境内复跑测试命令。
+- 当前环境未安装 Maven，未能在此环境内复跑 `mvn` 相关命令。
