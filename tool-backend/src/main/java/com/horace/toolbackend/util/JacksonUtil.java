@@ -9,9 +9,6 @@ public final class JacksonUtil {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private JacksonUtil() {
-    }
-
     /**
      * Parse JSON string into a JsonNode object.
      *
@@ -21,6 +18,22 @@ public final class JacksonUtil {
     public static JsonNode readTree(String json) {
         try {
             return OBJECT_MAPPER.readTree(json);
+        } catch (JsonProcessingException e) {
+            throw new JsonConvertException("Failed to parse json", e);
+        }
+    }
+
+    /**
+     * Parse JSON string into a Java object.
+     *
+     * @param json      JSON string to be parsed (not blank)
+     * @param valueType target Java class type
+     * @param <T>       target Java class type
+     * @return Java object representation of the JSON string
+     */
+    public static <T> T readValue(String json, Class<T> valueType) {
+        try {
+            return OBJECT_MAPPER.readValue(json, valueType);
         } catch (JsonProcessingException e) {
             throw new JsonConvertException("Failed to parse json", e);
         }
