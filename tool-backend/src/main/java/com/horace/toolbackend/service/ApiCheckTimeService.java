@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -27,7 +27,7 @@ public class ApiCheckTimeService implements CheckTimeService {
     }
 
     @Override
-    public boolean checkTime(LocalDateTime time) {
+    public boolean checkTime(LocalDate time) {
         String formattedTime = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         try {
             TimeApiEntity entity = restClient.getTime(formattedTime);

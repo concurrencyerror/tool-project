@@ -11,13 +11,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ApiCheckTimeServiceTest {
@@ -35,7 +32,7 @@ class ApiCheckTimeServiceTest {
     @Test
     void Should_Return_True_When_workDay() {
         when(thirdTimeApiClient.getTime("2026-01-24")).thenReturn(entity(DateType.workDay));
-        boolean result = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        boolean result = apiCheckTimeService.checkTime(LocalDate.of(2026, 1, 24));
         assertThat(result).isTrue();
         verify(thirdTimeApiClient).getTime("2026-01-24");
     }
@@ -43,7 +40,7 @@ class ApiCheckTimeServiceTest {
     @Test
     void Should_Return_True_When_change() {
         when(thirdTimeApiClient.getTime("2026-01-24")).thenReturn(entity(DateType.change));
-        boolean result = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        boolean result = apiCheckTimeService.checkTime(LocalDate.of(2026, 1, 24));
         assertThat(result).isTrue();
         verify(thirdTimeApiClient).getTime("2026-01-24");
     }
@@ -51,12 +48,12 @@ class ApiCheckTimeServiceTest {
     @Test
     void Should_Return_False_When_holiday_or_weekend() {
         when(thirdTimeApiClient.getTime("2026-01-24")).thenReturn(entity(DateType.holiday));
-        boolean holidayResult = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        boolean holidayResult = apiCheckTimeService.checkTime(LocalDate.of(2026, 1, 24));
         assertThat(holidayResult).isFalse();
 
         reset(thirdTimeApiClient);
         when(thirdTimeApiClient.getTime("2026-01-24")).thenReturn(entity(DateType.weekend));
-        boolean weekendResult = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        boolean weekendResult = apiCheckTimeService.checkTime(LocalDate.of(2026, 1, 24));
         assertThat(weekendResult).isFalse();
 
         verify(thirdTimeApiClient).getTime("2026-01-24");
@@ -66,7 +63,7 @@ class ApiCheckTimeServiceTest {
     void should_return_true_when_restClient_throws_thirdApiException() {
         when(thirdTimeApiClient.getTime("2026-01-24")).thenThrow(new ThirdApiException("boom"));
 
-        boolean result = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        boolean result = apiCheckTimeService.checkTime(LocalDate.of(2026, 1, 24));
 
         assertThat(result).isTrue();
         verify(thirdTimeApiClient).getTime("2026-01-24");
@@ -75,7 +72,7 @@ class ApiCheckTimeServiceTest {
     @Test
     void should_return_false_when_restClient_formats_date() {
         when(thirdTimeApiClient.getTime(anyString())).thenReturn(entity(DateType.workDay));
-        apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        apiCheckTimeService.checkTime(LocalDate.of(2026, 1, 24));
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(thirdTimeApiClient).getTime(captor.capture());
@@ -85,12 +82,12 @@ class ApiCheckTimeServiceTest {
     @Test
     void should_return_true_when_entity_or_type_is_null() {
         when(thirdTimeApiClient.getTime(anyString())).thenReturn(null);
-        boolean allNullResult = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        boolean allNullResult = apiCheckTimeService.checkTime(LocalDate.of(2026, 1, 24));
         assertThat(allNullResult).isTrue();
 
         reset(thirdTimeApiClient);
         when(thirdTimeApiClient.getTime(anyString())).thenReturn(entityWithNullType());
-        boolean nullTypeResult = apiCheckTimeService.checkTime(LocalDateTime.of(2026, 1, 24, 10, 0));
+        boolean nullTypeResult = apiCheckTimeService.checkTime(LocalDate.of(2026, 1, 24));
         assertThat(nullTypeResult).isTrue();
     }
 

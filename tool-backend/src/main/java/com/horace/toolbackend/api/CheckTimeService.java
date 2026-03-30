@@ -1,7 +1,7 @@
 package com.horace.toolbackend.api;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public interface CheckTimeService {
-    boolean checkTime(LocalDateTime time);
+    boolean checkTime(LocalDate time);
 }

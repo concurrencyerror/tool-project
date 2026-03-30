@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -30,7 +30,7 @@ public class DBCheckTimeService implements CheckTimeService {
      * @return 如果需要上班或者提醒就是true，不需要就是false
      */
     @Override
-    public boolean checkTime(LocalDateTime time) {
+    public boolean checkTime(LocalDate time) {
         List<RemindEntity> timeList = remindService.findRemindEntitiesByTime(time);
         return !timeList.isEmpty();
     }
