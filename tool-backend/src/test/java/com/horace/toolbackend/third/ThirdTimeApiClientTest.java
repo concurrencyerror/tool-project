@@ -47,6 +47,19 @@ class ThirdTimeApiClientTest {
     }
 
     @Test
+    void should_ignore_unknown_fields_in_response() {
+        when(httpService.get(BASE_URL + "/2026-01-24"))
+                .thenReturn("{\"code\":\"0\",\"type\":{\"type\":\"0\",\"name\":\"工作日\"},\"extra\":\"ignored\"}");
+
+        TimeApiEntity result = thirdTimeApiClient.getTime("2026-01-24");
+
+        assertThat(result).isNotNull();
+        assertThat(result.getCode()).isEqualTo("0");
+        assertThat(result.getType()).isNotNull();
+        assertThat(result.getType().type).isEqualTo(DateType.workDay);
+    }
+
+    @Test
     void should_throw_thirdApiException_when_http_request_fails() {
         HttpRequestException cause = new HttpRequestException("HTTP request failed", 500, "boom");
         when(httpService.get(BASE_URL + "/2026-01-24")).thenThrow(cause);

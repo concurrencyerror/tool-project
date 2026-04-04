@@ -1,7 +1,9 @@
 package com.horace.toolbackend.entity.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.horace.toolbackend.enums.DateType;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TimeApiEntity {
     private String code;
 
@@ -23,6 +25,7 @@ public class TimeApiEntity {
         this.type = type;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Type {
         public DateType type;
     }
