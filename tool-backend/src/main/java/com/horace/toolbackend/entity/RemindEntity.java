@@ -2,7 +2,7 @@ package com.horace.toolbackend.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bs_remind_config")
@@ -12,13 +12,13 @@ public class RemindEntity {
     private Long id;
 
     //提醒的开始时间
-    private Date remindStartTime;
+    private LocalDateTime remindStartTime;
 
     //提醒的结束时间
-    private Date remindEndTime;
+    private LocalDateTime remindEndTime;
 
     //配置的开始时间
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id")
@@ -45,27 +45,27 @@ public class RemindEntity {
         this.id = id;
     }
 
-    public Date getRemindStartTime() {
+    public LocalDateTime getRemindStartTime() {
         return remindStartTime;
     }
 
-    public void setRemindStartTime(Date remindStartTime) {
+    public void setRemindStartTime(LocalDateTime remindStartTime) {
         this.remindStartTime = remindStartTime;
     }
 
-    public Date getRemindEndTime() {
+    public LocalDateTime getRemindEndTime() {
         return remindEndTime;
     }
 
-    public void setRemindEndTime(Date remindEndTime) {
+    public void setRemindEndTime(LocalDateTime remindEndTime) {
         this.remindEndTime = remindEndTime;
     }
 
-    public Date getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 }

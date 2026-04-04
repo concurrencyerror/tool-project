@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -31,7 +32,9 @@ public class DBCheckTimeService implements CheckTimeService {
      */
     @Override
     public boolean checkTime(LocalDate time) {
-        List<RemindEntity> timeList = remindService.findRemindEntitiesByTime(time);
+        LocalDateTime queryTime = time.atStartOfDay();
+        log.info("check time db level {}", queryTime);
+        List<RemindEntity> timeList = remindService.findRemindEntitiesByTime(queryTime);
         return !timeList.isEmpty();
     }
 }

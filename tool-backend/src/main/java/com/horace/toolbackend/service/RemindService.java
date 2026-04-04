@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,7 +20,7 @@ public class RemindService {
         this.remindRepository = remindRepository;
     }
 
-    public List<RemindEntity> findRemindEntitiesByTime(LocalDate time) {
+    public List<RemindEntity> findRemindEntitiesByTime(LocalDateTime time) {
         return remindRepository.findActiveAt(time);
     }
 }
