@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -42,6 +43,13 @@ public class GlobalExceptionHandler {
                                                                                   HttpServletRequest request) {
         log.warn("Malformed request body: {}", exception.getMessage());
         return buildResponse(HttpStatus.BAD_REQUEST, "Malformed JSON request body", request);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(AuthenticationException exception,
+                                                                          HttpServletRequest request) {
+        log.warn("Authentication failed: {}", exception.getMessage());
+        return buildResponse(HttpStatus.UNAUTHORIZED, "用户名或密码错误", request);
     }
 
     @ExceptionHandler({

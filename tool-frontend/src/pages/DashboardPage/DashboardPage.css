@@ -1,0 +1,33 @@
+.dashboard-page {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+    background: #f4f7f6;
+    color: #1c2426;
+}
+
+.content-area {
+    min-width: 0;
+    padding: 32px;
+}
+
+.empty-state {
+    display: grid;
+    min-height: 220px;
+    place-items: center;
+    border: 1px dashed #cbd8d7;
+    border-radius: 8px;
+    color: #647477;
+    text-align: center;
+    background: #ffffff;
+}
+
+@media (max-width: 520px) {
+    .dashboard-page {
+        grid-template-columns: 1fr;
+    }
+
+    .content-area {
+        padding: 22px 16px;
+    }
+}

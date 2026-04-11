@@ -1,0 +1,66 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid #dce4e3;
+    background: #ffffff;
+    padding: 26px 18px;
+}
+
+.dashboard-brand {
+    margin: 0 0 30px;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0;
+    color: #152a2d;
+}
+
+.menu-item {
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    color: #334346;
+    background: transparent;
+    cursor: pointer;
+}
+
+.menu-item:hover,
+.menu-item.active {
+    border-color: #b8cfcc;
+    color: #12645f;
+    background: #eaf4f2;
+}
+
+.logout-button {
+    border: 1px solid #f0b8b2;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font: inherit;
+    font-weight: 700;
+    color: #b42318;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.logout-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@media (max-width: 520px) {
+    .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid #dce4e3;
+        padding: 20px 16px;
+        gap: 16px;
+    }
+
+    .dashboard-brand {
+        margin-bottom: 18px;
+    }
+}

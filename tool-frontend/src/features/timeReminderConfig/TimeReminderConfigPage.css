@@ -1,0 +1,103 @@
+.content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.content-header h2 {
+    margin: 4px 0 0;
+    font-size: 26px;
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: #152a2d;
+}
+
+.eyebrow {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #527072;
+}
+
+.refresh-button {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 16px;
+    font: inherit;
+    font-weight: 700;
+    color: #ffffff;
+    background: #1b7f78;
+    cursor: pointer;
+}
+
+.refresh-button:disabled {
+    background: #7ca9a5;
+    cursor: not-allowed;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid #dce4e3;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.config-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+}
+
+.config-table th,
+.config-table td {
+    border-bottom: 1px solid #e3e9e8;
+    padding: 15px 18px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.config-table th {
+    font-size: 14px;
+    font-weight: 700;
+    color: #334346;
+    background: #eef4f3;
+}
+
+.config-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons button {
+    border: 1px solid #b8cfcc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font: inherit;
+    font-weight: 700;
+    color: #12645f;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.action-buttons .danger {
+    border-color: #f0b8b2;
+    color: #b42318;
+}
+
+.empty-cell {
+    color: #647477;
+    text-align: center;
+}
+
+@media (max-width: 520px) {
+    .content-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
