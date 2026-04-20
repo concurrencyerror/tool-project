@@ -29,11 +29,11 @@ import java.time.Instant;
 @EnableWebSecurity
 public class ToolSecurityConfig {
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     private final ToolUserDetailsService toolUserDetailsService;
 
-    public ToolSecurityConfig(ObjectMapper objectMapper, ToolUserDetailsService toolUserDetailsService) {
-        this.objectMapper = objectMapper;
+    public ToolSecurityConfig(ToolUserDetailsService toolUserDetailsService) {
         this.toolUserDetailsService = toolUserDetailsService;
     }
 

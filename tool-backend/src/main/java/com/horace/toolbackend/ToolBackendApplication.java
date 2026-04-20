@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ToolBackendApplication {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         LocalEnvLoader.load();
         SpringApplication.run(ToolBackendApplication.class, args);
     }
