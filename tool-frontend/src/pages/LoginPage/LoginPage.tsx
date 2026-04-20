@@ -7,7 +7,7 @@ type LoginPageProps = {
 };
 
 function LoginPage({onLoginSuccess}: LoginPageProps) {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [loginMessage, setLoginMessage] = useState('');
@@ -18,7 +18,7 @@ function LoginPage({onLoginSuccess}: LoginPageProps) {
         setIsSubmitting(true);
 
         try {
-            await login(email, password);
+            await login(username.trim(), password);
             onLoginSuccess();
         } catch (error) {
             console.error(error);
@@ -38,14 +38,14 @@ function LoginPage({onLoginSuccess}: LoginPageProps) {
 
                     <form className="login-form" onSubmit={handleSubmit}>
                         <label className="field">
-                            <span>邮箱</span>
+                            <span>用户名</span>
                             <input
-                                type="email"
-                                name="email"
-                                placeholder="请输入邮箱"
-                                autoComplete="email"
-                                value={email}
-                                onChange={(event) => setEmail(event.target.value)}
+                                type="text"
+                                name="username"
+                                placeholder="请输入用户名"
+                                autoComplete="username"
+                                value={username}
+                                onChange={(event) => setUsername(event.target.value)}
                                 required
                             />
                         </label>

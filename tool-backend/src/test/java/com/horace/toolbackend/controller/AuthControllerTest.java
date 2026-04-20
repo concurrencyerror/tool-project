@@ -56,16 +56,16 @@ class AuthControllerTest {
         );
 
         when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(authentication);
-        when(userService.findByLoginId("admin@example.com")).thenReturn(Optional.of(user));
+        when(userService.findByUsername("admin")).thenReturn(Optional.of(user));
 
         ApiSuccessResponse<AuthUserResponse> response = authController.login(
-                new LoginRequest(null, "admin@example.com", "password"),
+                new LoginRequest("admin", "password"),
                 request
         );
 
         assertEquals(200, response.code());
         assertEquals("登录成功", response.message());
-        assertEquals("admin@example.com", response.data().username());
+        assertEquals("admin", response.data().username());
 
         HttpSession session = request.getSession(false);
         assertNotNull(session);
@@ -80,7 +80,7 @@ class AuthControllerTest {
         request.getSession(true).setAttribute("demo", "value");
         SecurityContextHolder.getContext().setAuthentication(
                 UsernamePasswordAuthenticationToken.authenticated(
-                        "admin@example.com",
+                        "admin",
                         null,
                         AuthorityUtils.createAuthorityList("ROLE_USER")
                 )
@@ -100,7 +100,7 @@ class AuthControllerTest {
 
         User user = new User();
         user.setId(1L);
-        user.setUsername("admin@example.com");
+        user.setUsername("admin");
         user.setPassword("$2a$10$demo");
         user.setTenant(tenant);
         return user;

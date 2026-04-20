@@ -19,7 +19,7 @@ public class ToolUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByLoginId(username)
+        User user = userService.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("用户不存在"));
 
         return new org.springframework.security.core.userdetails.User(

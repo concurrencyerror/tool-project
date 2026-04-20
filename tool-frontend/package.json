@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "ide:start": "node ./scripts/FrontendIdeLauncher.mjs",
     "build": "tsc --noEmit --incremental false && vite build",
     "preview": "vite preview --host 0.0.0.0"
   },

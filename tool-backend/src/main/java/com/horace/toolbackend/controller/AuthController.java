@@ -35,8 +35,8 @@ public class AuthController {
     @PostMapping("/public/auth/login")
     public ApiSuccessResponse<AuthUserResponse> login(@RequestBody LoginRequest request,
                                                       HttpServletRequest httpServletRequest) {
-        String loginId = request.loginId();
-        if (loginId.isBlank()) {
+        String username = request.username() == null ? "" : request.username().trim();
+        if (username.isBlank()) {
             throw new IllegalArgumentException("登录账号不能为空");
         }
         if (request.password() == null || request.password().isBlank()) {
@@ -44,7 +44,7 @@ public class AuthController {
         }
 
         Authentication authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken.unauthenticated(loginId, request.password())
+                UsernamePasswordAuthenticationToken.unauthenticated(username, request.password())
         );
 
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
@@ -54,7 +54,7 @@ public class AuthController {
         HttpSession session = httpServletRequest.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
 
-        User user = userService.findByLoginId(loginId)
+        User user = userService.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("用户不存在"));
 
         return ApiSuccessResponse.success("登录成功", AuthUserResponse.from(user));
