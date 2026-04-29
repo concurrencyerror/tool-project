@@ -23,4 +23,28 @@ public class RemindService {
     public List<RemindEntity> findRemindEntitiesByTime(LocalDateTime time) {
         return remindRepository.findActiveAt(time);
     }
+
+    public RemindEntity save(RemindEntity remindEntity) {
+        return remindRepository.save(remindEntity);
+    }
+
+    public void delete(RemindEntity remindEntity) {
+        remindRepository.delete(remindEntity);
+    }
+
+    public void deleteById(Long id) {
+        remindRepository.deleteById(id);
+    }
+
+    public RemindEntity findById(Long id) {
+        return remindRepository.findById(id).orElse(null);
+    }
+
+    public RemindEntity update(RemindEntity remindEntity) {
+        return remindRepository.save(remindEntity);
+    }
+
+    public void deleteAll() {
+        remindRepository.deleteAll();
+    }
 }
