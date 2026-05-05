@@ -2,6 +2,8 @@ package com.horace.toolbackend.service.config;
 
 import com.horace.toolbackend.entity.RemindEntity;
 import com.horace.toolbackend.service.RemindService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,8 +18,12 @@ public class RemindFacadeService {
     }
 
 
-    public void save(RemindEntity remindEntity) {
-        remindService.save(remindEntity);
+    public Page<RemindEntity> findAll(Pageable pageable) {
+        return remindService.findAll(pageable);
+    }
+
+    public RemindEntity save(RemindEntity remindEntity) {
+        return remindService.save(remindEntity);
     }
 
     public void deleteById(Long id) {
