@@ -13,5 +13,8 @@ spring:
         show_sql: true
 server:
   port: 6677
+  servlet:
+    session:
+      timeout: 2h
 check:
   time: https://timor.tech/api/holiday/info
