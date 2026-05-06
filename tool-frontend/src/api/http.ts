@@ -84,6 +84,10 @@ export const getListCandidate = (payload: unknown): unknown => {
         return payload.items;
     }
 
+    if (Array.isArray(payload.content)) {
+        return payload.content;
+    }
+
     if (isObject(payload.data)) {
         return getListCandidate(payload.data);
     }

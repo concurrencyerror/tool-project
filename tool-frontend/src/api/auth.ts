@@ -1,5 +1,5 @@
-import {LOGIN_API_URL, LOGOUT_API_URL} from './config';
-import {assertApiSuccess, readJson} from './http';
+import {AUTH_ME_API_URL, LOGIN_API_URL, LOGOUT_API_URL} from './config';
+import {assertApiSuccess, isFailedApiResult, readJson} from './http';
 
 export const login = async (username: string, password: string) => {
     const response = await fetch(LOGIN_API_URL, {
@@ -26,4 +26,13 @@ export const logout = async () => {
     const payload = await readJson(response);
 
     assertApiSuccess(response, payload, '退出失败，请稍后再试');
+};
+
+export const checkLoginStatus = async () => {
+    const response = await fetch(AUTH_ME_API_URL, {
+        credentials: 'include',
+    });
+    const payload = await readJson(response);
+
+    return !isFailedApiResult(response, payload);
 };

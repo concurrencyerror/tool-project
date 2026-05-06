@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 /**
  * 时间提醒配置管理接口。
  *
@@ -49,11 +51,15 @@ public class RemindConfigController {
     /**
      * 新增时间提醒配置。
      *
+     * <p>创建时间由后端使用服务器当前时间生成，前端不需要传入。</p>
+     *
      * @param remindEntity 待新增的提醒配置
      * @return 保存后的提醒配置
      */
     @PostMapping
     public ApiSuccessResponse<RemindEntity> save(@RequestBody RemindEntity remindEntity) {
+        remindEntity.setId(null);
+        remindEntity.setCreateTime(LocalDateTime.now());
         return ApiSuccessResponse.success("Create success", remindFacadeService.save(remindEntity));
     }
 
@@ -71,7 +77,8 @@ public class RemindConfigController {
     /**
      * 根据 id 修改时间提醒配置。
      *
-     * <p>路径中的 id 是最终生效的配置 id，请求体中的 id 会被路径 id 覆盖。</p>
+     * <p>路径中的 id 是最终生效的配置 id，请求体中的 id 会被路径 id 覆盖。
+     * 创建时间会沿用原记录，不允许前端修改。</p>
      *
      * @param id           提醒配置 id
      * @param remindEntity 修改后的提醒配置内容
@@ -80,8 +87,9 @@ public class RemindConfigController {
     @PutMapping("/{id}")
     public ApiSuccessResponse<RemindEntity> update(@PathVariable Long id,
                                                    @RequestBody RemindEntity remindEntity) {
-        findExisting(id);
+        RemindEntity existing = findExisting(id);
         remindEntity.setId(id);
+        remindEntity.setCreateTime(existing.getCreateTime());
         return ApiSuccessResponse.success("Update success", remindFacadeService.update(remindEntity));
     }
 

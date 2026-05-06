@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 /**
  * 关于提醒的配置接口
  */
@@ -25,7 +23,6 @@ public class RemindFacadeService {
     }
 
     public RemindEntity save(RemindEntity remindEntity) {
-        remindEntity.setCreateTime(LocalDateTime.now());
         return remindService.save(remindEntity);
     }
 

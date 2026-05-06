@@ -37,6 +37,73 @@
     cursor: not-allowed;
 }
 
+.header-actions,
+.form-actions,
+.pagination-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.secondary-button,
+.pagination-actions button {
+    border: 1px solid #b8cfcc;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font: inherit;
+    font-weight: 700;
+    color: #12645f;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.pagination-actions button:disabled,
+.secondary-button:disabled {
+    color: #7d9190;
+    background: #eef4f3;
+    cursor: not-allowed;
+}
+
+.config-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(180px, 1fr)) auto;
+    gap: 14px;
+    align-items: end;
+    margin-bottom: 18px;
+    padding: 18px;
+    border: 1px solid #dce4e3;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.config-form label {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+}
+
+.config-form span {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334346;
+}
+
+.config-form input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #c7d6d4;
+    border-radius: 8px;
+    padding: 10px 11px;
+    color: #1c2426;
+    background: #ffffff;
+}
+
+.page-message {
+    margin: 0 0 14px;
+    color: #9f391f;
+    font-weight: 700;
+}
+
 .table-wrap {
     overflow-x: auto;
     border: 1px solid #dce4e3;
@@ -85,6 +152,12 @@
     cursor: pointer;
 }
 
+.action-buttons button:disabled {
+    color: #7d9190;
+    background: #eef4f3;
+    cursor: not-allowed;
+}
+
 .action-buttons .danger {
     border-color: #f0b8b2;
     color: #b42318;
@@ -95,9 +168,30 @@
     text-align: center;
 }
 
+.pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 16px;
+    color: #526569;
+}
+
 @media (max-width: 520px) {
     .content-header {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .header-actions,
+    .form-actions,
+    .pagination-bar,
+    .pagination-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .config-form {
+        grid-template-columns: 1fr;
     }
 }

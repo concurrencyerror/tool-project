@@ -4,18 +4,28 @@ type ReminderConfigTableProps = {
     data: ReminderConfig[];
     isLoading: boolean;
     message: string;
+    deletingId: string | number | null;
+    onEdit: (item: ReminderConfig) => void;
+    onDelete: (id: string | number) => void;
 };
 
-function ReminderConfigTable({data, isLoading, message}: ReminderConfigTableProps) {
+function ReminderConfigTable({
+                                 data,
+                                 isLoading,
+                                 message,
+                                 deletingId,
+                                 onEdit,
+                                 onDelete,
+                             }: ReminderConfigTableProps) {
     return (
         <div className="table-wrap">
             <table className="config-table">
                 <thead>
                 <tr>
-                    <th>提醒的开始时间</th>
-                    <th>提醒的结束时间</th>
-                    <th>配置的开始时间</th>
-                    <th>操作</th>
+                    <th>Reminder start</th>
+                    <th>Reminder end</th>
+                    <th>Config time</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,9 +37,16 @@ function ReminderConfigTable({data, isLoading, message}: ReminderConfigTableProp
                             <td>{item.configStartTime}</td>
                             <td>
                                 <div className="action-buttons">
-                                    <button type="button">修改</button>
-                                    <button className="danger" type="button">
-                                        删除
+                                    <button type="button" onClick={() => onEdit(item)}>
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="danger"
+                                        type="button"
+                                        onClick={() => onDelete(item.id)}
+                                        disabled={deletingId === item.id}
+                                    >
+                                        {deletingId === item.id ? 'Deleting' : 'Delete'}
                                     </button>
                                 </div>
                             </td>
@@ -38,7 +55,7 @@ function ReminderConfigTable({data, isLoading, message}: ReminderConfigTableProp
                 ) : (
                     <tr>
                         <td className="empty-cell" colSpan={4}>
-                            {isLoading ? '正在加载数据...' : message || '暂无数据'}
+                            {isLoading ? 'Loading data...' : message || 'No data'}
                         </td>
                     </tr>
                 )}

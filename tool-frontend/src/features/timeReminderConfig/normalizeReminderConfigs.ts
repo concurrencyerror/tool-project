@@ -1,4 +1,4 @@
-import {getListCandidate, isObject} from '../../api/http';
+import {isObject} from '../../api/http';
 import type {ReminderConfig} from '../../types/reminderConfig';
 
 const readText = (source: Record<string, unknown>, keys: string[]) => {
@@ -13,21 +13,46 @@ const readText = (source: Record<string, unknown>, keys: string[]) => {
     return '-';
 };
 
-export const normalizeReminderConfigs = (payload: unknown): ReminderConfig[] => {
-    const list = getListCandidate(payload);
+export const normalizeReminderConfig = (
+    source: Record<string, unknown>,
+    fallbackId: string | number,
+): ReminderConfig => {
+    const id = readText(source, ['id', 'configId', 'reminderConfigId']);
 
-    if (!Array.isArray(list)) {
-        return [];
+    return {
+        id: id === '-' ? fallbackId : id,
+        reminderStartTime: readText(source, ['reminderStartTime', 'remindStartTime', 'startReminderTime']),
+        reminderEndTime: readText(source, ['reminderEndTime', 'remindEndTime', 'endReminderTime']),
+        configStartTime: readText(source, ['configStartTime', 'createTime', 'settingStartTime']),
+    };
+};
+
+export const normalizeReminderConfigs = (payload: unknown): ReminderConfig[] => {
+    if (Array.isArray(payload)) {
+        return payload.filter(isObject).map((item, index) => normalizeReminderConfig(item, index));
     }
 
-    return list.filter(isObject).map((item, index) => {
-        const id = readText(item, ['id', 'configId', 'reminderConfigId']);
+    const data = isObject(payload) ? payload.data : undefined;
 
-        return {
-            id: id === '-' ? index : id,
-            reminderStartTime: readText(item, ['reminderStartTime', 'remindStartTime', 'startReminderTime', '提醒的开始时间']),
-            reminderEndTime: readText(item, ['reminderEndTime', 'remindEndTime', 'endReminderTime', '提醒的结束时间']),
-            configStartTime: readText(item, ['configStartTime', 'settingStartTime', '配置的开始时间']),
-        };
-    });
+    if (Array.isArray(data)) {
+        return data.filter(isObject).map((item, index) => normalizeReminderConfig(item, index));
+    }
+
+    if (isObject(data) && Array.isArray(data.content)) {
+        return data.content.filter(isObject).map((item, index) => normalizeReminderConfig(item, index));
+    }
+
+    if (isObject(payload) && Array.isArray(payload.content)) {
+        return payload.content.filter(isObject).map((item, index) => normalizeReminderConfig(item, index));
+    }
+
+    if (isObject(data)) {
+        return [normalizeReminderConfig(data, 0)];
+    }
+
+    if (isObject(payload)) {
+        return [normalizeReminderConfig(payload, 0)];
+    }
+
+    return [];
 };
