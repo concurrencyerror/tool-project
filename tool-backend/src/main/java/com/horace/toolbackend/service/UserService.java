@@ -19,6 +19,6 @@ public class UserService {
         if (username == null || username.isBlank()) {
             return Optional.empty();
         }
-        return userRepository.findByUsername(username.trim());
+        return userRepository.·findByUsername(username.trim());
     }
 }
