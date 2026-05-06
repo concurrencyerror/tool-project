@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mariadb://tool-db:3306/tools
-    username: root
+    url: jdbc:postgresql://tool-pgdb:5432/tool
+    username: tool
     password: ${DB_PASSWORD}
-    driver-class-name: org.mariadb.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
   data:
     redis:
       host: tool-redis
